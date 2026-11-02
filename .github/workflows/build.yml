@@ -28,7 +28,10 @@ jobs:
         run: |
           unzip -q nonevid-fixed-source.zip -d extracted
           test -f extracted/nonevid/settings.gradle.kts
-
+      - name: Fix missing import
+        run: |
+          FILE="extracted/nonevid/app/src/main/java/com/example/moviehub/MainActivity.kt"
+          grep -q '^import androidx.compose.foundation.isSystemInDarkTheme$' "$FILE" || sed -i '/^package /a import androidx.compose.foundation.isSystemInDarkTheme' "$FILE"
       - name: Build APK
         working-directory: extracted/nonevid
         run: gradle assembleDebug --no-daemon
